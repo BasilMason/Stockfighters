@@ -9,4 +9,16 @@ public class SFUtils {
         return "https://api.stockfighter.io/ob/api/heartbeat";
     }
 
+    public static String urlVenues(SFVenues venue) {
+        return "https://api.stockfighter.io/ob/api/venues/" + venue.name() + "/heartbeat";
+    }
+
+    public static String urlStocks(SFVenues venue) {
+        return "https://api.stockfighter.io/ob/api/venues/" + venue.name() + "/stocks";
+    }
+
+    public static String urlOrderbook(SFVenues venue, SFStocks stock) {
+        return "https://api.stockfighter.io/ob/api/venues/" + venue.name() + "/stocks/" + stock.name();
+    }
+
 }

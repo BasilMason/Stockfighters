@@ -18,20 +18,78 @@ public class MainApp {
 
     private void launch() {
 
+        // 1. Heartbeat]
+        testHeartbeat();
+
+        // 2. Venues
+        testVenue(SFVenues.TESTEX);
+
+        // 3. Stocks
+        testStocks(SFVenues.TESTEX);
+
+        // 4. Order book
+        testOrderbook(SFVenues.TESTEX, SFStocks.FOOBAR);
+
+    }
+
+    // api call tests
+    private void testHeartbeat() {
         try {
+            System.out.println("Checking heartbeat");
+            HttpResponse heartbeat = HttpUtils.sendGet(SFUtils.urlHeartbeat());
 
-            HttpResponse response = HttpUtils.sendGet(SFUtils.urlHeartbeat());
-
-            printErrorCode(response.getErrorCode());
-            printResponse(response.getResponse());
-
+            printErrorCode(heartbeat.getErrorCode());
+            printResponse(heartbeat.getResponse());
+            System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
         }
-
     }
 
+    private void testVenue(SFVenues venue) {
+        try {
+            System.out.println("Checking venue: " + venue.name());
+            HttpResponse venueCheck = HttpUtils.sendGet(SFUtils.urlVenues(venue));
+
+            printErrorCode(venueCheck.getErrorCode());
+            printResponse(venueCheck.getResponse());
+            System.out.println();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        }
+    }
+
+    private void testStocks(SFVenues venue) {
+        try {
+            System.out.println("Checking stocks on venue: " + venue.name());
+            HttpResponse stockCheck = HttpUtils.sendGet(SFUtils.urlStocks(venue));
+
+            printErrorCode(stockCheck.getErrorCode());
+            printResponse(stockCheck.getResponse());
+            System.out.println();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        }
+    }
+
+    private void testOrderbook(SFVenues venue, SFStocks stock) {
+        try {
+            System.out.println("Checking orderbook for stock: " + stock.name() + " on venue: " + venue.name());
+            HttpResponse stockCheck = HttpUtils.sendGet(SFUtils.urlOrderbook(venue, stock));
+
+            printErrorCode(stockCheck.getErrorCode());
+            printResponse(stockCheck.getResponse());
+            System.out.println();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        }
+    }
+
+    // print responses
     private void printErrorCode(int errorCode) {
         System.out.println("Error Code: " + errorCode);
     }
