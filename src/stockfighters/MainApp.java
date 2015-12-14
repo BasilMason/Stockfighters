@@ -6,6 +6,7 @@ import http.HttpUtils;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.OptionalInt;
 
 /**
  * Created by Basil on 14/12/2015.
@@ -29,6 +30,17 @@ public class MainApp {
 
         // 4. Order book
         testOrderbook(SFVenues.TESTEX, SFStocks.FOOBAR);
+
+        // 5. Order
+        String account = "EXB123456";
+        SFVenues venue = SFVenues.TESTEX;
+        SFStocks stock = SFStocks.FOOBAR;
+        OptionalInt price = null;
+        int qty = 100;
+        SFOrderDirection direction = SFOrderDirection.buy;
+        SFOrderType orderType = SFOrderType.MARKET;
+
+        testPlaceOrder(new SFOrder(account, venue, stock, price, qty, direction, orderType));
 
     }
 
@@ -82,6 +94,23 @@ public class MainApp {
 
             printErrorCode(stockCheck.getErrorCode());
             printResponse(stockCheck.getResponse());
+            System.out.println();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        }
+    }
+
+    private void testPlaceOrder(SFOrder order) {
+
+        // String account, SFVenues venue, SFStocks stock, OptionalInt price, int qty, SFOrderDirection direction, SFOrderType orderType
+
+        try {
+            System.out.println("Submitting order for stock: " + order.getStock() + " on venue: " + order.getVenue());
+            HttpResponse placeOrder = HttpUtils.sendPost(SFUtils.urlOrder(order.getVenue(), order.getStock()), order.getOrder());
+
+            printErrorCode(placeOrder.getErrorCode());
+            printResponse(placeOrder.getResponse());
             System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
