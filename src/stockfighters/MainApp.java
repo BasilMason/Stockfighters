@@ -20,27 +20,41 @@ public class MainApp {
     private void launch() {
 
         // 1. Heartbeat]
-        testHeartbeat();
+        //testHeartbeat();
 
         // 2. Venues
-        testVenue(SFVenues.TESTEX);
+        //testVenue(SFVenues.TESTEX);
 
         // 3. Stocks
-        testStocks(SFVenues.TESTEX);
+        //testStocks(SFVenues.TESTEX);
 
         // 4. Order book
-        testOrderbook(SFVenues.TESTEX, SFStocks.FOOBAR);
+        //testOrderbook(SFVenues.TESTEX, SFStocks.FOOBAR);
 
         // 5. Order
-        String account = "EXB123456";
-        SFVenues venue = SFVenues.TESTEX;
-        SFStocks stock = SFStocks.FOOBAR;
+        String account = "SOB40081701";
+        SFVenues venue = SFVenues.OTLEX;
+        SFStocks stock = SFStocks.IXSU;
         OptionalInt price = null;
-        int qty = 100;
+        int qty = 50;
         SFOrderDirection direction = SFOrderDirection.buy;
         SFOrderType orderType = SFOrderType.MARKET;
 
-        testPlaceOrder(new SFOrder(account, venue, stock, price, qty, direction, orderType));
+        int purchased = 0;
+        int totQty = 70000;
+
+        while (purchased < totQty) {
+            System.out.println(purchased);
+            testPlaceOrder(new SFOrder(account, venue, stock, price, qty, direction, orderType));
+            purchased += qty;
+            try {
+                Thread.sleep(500);                 //1000 milliseconds is one second.
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+
 
     }
 

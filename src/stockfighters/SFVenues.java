@@ -5,5 +5,7 @@ package stockfighters;
  */
 public enum SFVenues {
     TESTEX,
-    OGEX;
+    OGEX
+    , KKBEX
+    , OTLEX;
 }
