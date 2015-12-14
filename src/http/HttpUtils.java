@@ -31,17 +31,28 @@ public class HttpUtils {
 
     public static HttpResponse sendPost(String url, Map<String, Object> params) throws Exception {
 
+        System.out.println(url);
         URL obj = new URL(url);
         HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
 
         // unpack params
         StringBuilder postData = new StringBuilder();
+        postData.append("{");
         for (Map.Entry<String,Object> param : params.entrySet()) {
-            if (postData.length() != 0) postData.append('&');
+            if (postData.length() != 1) postData.append(", ");
+            postData.append("\"");
             postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-            postData.append('=');
+            postData.append("\"");
+            postData.append(": ");
+
+            if (!(param.getKey().equals("qty") || param.getKey().equals("price"))) postData.append("\"");
             postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+            if (!(param.getKey().equals("qty") || param.getKey().equals("price"))) postData.append("\"");
+
         }
+        postData.append("}");
+
+        System.out.println(postData);
         byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
         //add request header
@@ -49,7 +60,8 @@ public class HttpUtils {
         conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
         conn.setRequestProperty("X-Starfighter-Authorization", API_KEY);
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
         conn.setDoOutput(true);
         conn.getOutputStream().write(postDataBytes);
