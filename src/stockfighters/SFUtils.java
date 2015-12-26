@@ -25,4 +25,7 @@ public class SFUtils {
         return "https://api.stockfighter.io/ob/api/venues/" + venue.name() + "/stocks/" + stock.name() + "/orders";
     }
 
+    public static String urlQuote(String account, SFVenues venue) {
+        return "wss://api.stockfighter.io/ob/api/ws/" + account + "/venues/" + venue.name() + "/tickertape";
+    }
 }

@@ -6,5 +6,7 @@ package stockfighters;
 public enum SFStocks {
     FOOBAR
     , ROM
-    , IXSU;
+    , IXSU
+    , AHCL
+    , IHOM;
 }
