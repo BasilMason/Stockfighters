@@ -25,7 +25,15 @@ public class SFUtils {
         return "https://api.stockfighter.io/ob/api/venues/" + venue.name() + "/stocks/" + stock.name() + "/orders";
     }
 
-    public static String urlQuote(String account, SFVenues venue) {
+    public static String urlQuote(SFVenues venue, SFStocks stock) {
+        return "https://api.stockfighter.io/ob/api/venues/" + venue.name() + "/stocks/" + stock.name() + "/quote";
+    }
+
+    public static String urlQuoteWss(String account, SFVenues venue) {
         return "wss://api.stockfighter.io/ob/api/ws/" + account + "/venues/" + venue.name() + "/tickertape";
+    }
+
+    public static String urlQuoteStockWss(String account, SFVenues venue, SFStocks stock) {
+        return "wss://api.stockfighter.io/ob/api/ws/" + account + "/venues/" + venue.name() + "/tickertape/stocks/"  + stock.name();
     }
 }

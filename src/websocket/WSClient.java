@@ -9,6 +9,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -22,28 +23,78 @@ import java.net.URI;
 @ClientEndpoint
 public class WSClient {
 
-    Session userSession = null;
+    private Session session;
+    private String message;
+    private URI uri;
     private MessageHandler messageHandler;
 
-    public WSClient(URI endpointURI) {
-        try {
-            WebSocketContainer container = ContainerProvider
-                    .getWebSocketContainer();
-            container.connectToServer(this, endpointURI);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public WSClient(URI uri) {
+        session = null;
+        this.uri = uri;
+        message = null;
+        start();
+    }
+
+    public void start() {
+
+        if (session == null) {
+            try {
+                WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+                container.connectToServer(this, uri);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("Connection to " + uri.toString() + " already open.");
         }
+
+    }
+
+    public void stop() {
+        if (session != null) {
+            try {
+                session.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        session = null;
+    }
+
+    public void restart() {
+
+        try {
+            if (session != null) {
+                session.close();
+                session = null;
+            }
+
+            start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void restart(URI uri) {
+        this.uri = uri;
+        restart();
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     /**
      * Callback hook for Connection open events.
      *
-     * @param userSession
-     *            the userSession which is opened.
+     * @param session the userSession which is opened.
      */
     @OnOpen
-    public void onOpen(Session userSession) {
-        this.userSession = userSession;
+    public void onOpen(Session session) {
+        System.out.println("Session open: " + session.toString());
+        this.session = session;
     }
 
     /**
@@ -56,7 +107,9 @@ public class WSClient {
      */
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
-        this.userSession = null;
+        System.out.println("Closing session: " + userSession.toString() + ", reason: " + reason);
+        this.session = null;
+        start();    // restart
     }
 
     /**
@@ -68,9 +121,8 @@ public class WSClient {
      */
     @OnMessage
     public void onMessage(String message) {
-        if (this.messageHandler != null)
-            System.out.println(message);
-            this.messageHandler.handleMessage(message);
+        System.out.println("Message received: " + message);
+        this.message = message;
     }
 
     /**
@@ -88,7 +140,7 @@ public class WSClient {
      * @param message
      */
     public void sendMessage(String message) {
-        this.userSession.getAsyncRemote().sendText(message);
+        this.session.getAsyncRemote().sendText(message);
     }
 
     /**

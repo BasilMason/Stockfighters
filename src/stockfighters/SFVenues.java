@@ -12,5 +12,12 @@ public enum SFVenues {
     , DRLBEX
     , SNBTEX
     , CIAYEX
-    , GMSTEX;
+    , GMSTEX
+    , RUNYEX
+    , BNOEX
+    , PYFCEX
+    , GKHEX
+    , ENMEX
+    , IYTCEX
+    , FSNBEX;
 }

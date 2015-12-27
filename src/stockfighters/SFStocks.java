@@ -8,5 +8,12 @@ public enum SFStocks {
     , ROM
     , IXSU
     , AHCL
-    , IHOM;
+    , IHOM
+    , STL
+    , EPG
+    , CREH
+    , EPYD
+    , CFEO
+    , FOOW
+    , RAR;
 }
